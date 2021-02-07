@@ -29,8 +29,7 @@ opengl
 |	|	|---GLFW
 |	|	|---KHR
 |	|	\---glm		opengl运算库
-|	|---lib
-|	\---src			glad.c源文件
+|	\---lib			glfw库文件
 |---shader			GLSL文件
 |---source			项目文件
 \---temp			临时文件
