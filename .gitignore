@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+# Excutable dictionary
+/bin
+
+# Template dictionary
+/temp
