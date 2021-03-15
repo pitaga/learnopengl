@@ -56,11 +56,11 @@
     <ClInclude Include="ShaderProgram.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="StaticShader.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="MathTools.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticShader.h">
+      <Filter>源文件</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
