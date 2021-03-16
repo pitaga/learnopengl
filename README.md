@@ -28,7 +28,8 @@ opengl
 |	|	|---glad
 |	|	|---GLFW
 |	|	|---KHR
-|	|	\---glm		opengl运算库
+|	|	|---glm		opengl运算库
+|	|	\---SOIL2	纹理导入库
 |	\---lib			glfw库文件
 |---shader			GLSL文件
 |---source			项目文件
