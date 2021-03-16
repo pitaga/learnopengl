@@ -15,7 +15,7 @@
     - 库目录 —— `..\..\depend\lib` 
 
   - 链接器
-    - 附加依赖项 —— `glfw3.lib` （`opengl32.lib` 在 visual studio 2019 SDK 中已经存在）
+    - 附加依赖项 —— `glfw3.lib` （`opengl32.lib` 在 visual studio 2019 SDK 中已经存在）, `soil2-debug.lib` 
 - 添加文件
   - 将`glad.c` 从 `.\depend\src` 目录移动到到项目源文件目录（`.\source\$(ProjectName)\`）下
 - 各个目录解释
