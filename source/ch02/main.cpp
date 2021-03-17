@@ -58,7 +58,8 @@ void display(GLFWwindow* window, double currentTime)
 	//glClear(GL_COLOR_BUFFER_BIT);
 	glUseProgram(renderingProgram);
 	glPointSize(30);
-	glDrawArrays(GL_POINTS, 0, numVAOS);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
 GLuint createShaderProgram()
