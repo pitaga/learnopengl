@@ -1,4 +1,6 @@
 #include <iostream>
+#include <fstream>
+#include <string>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -13,6 +15,8 @@ GLuint createShaderProgram();
 void printShaderLog(GLuint shader);
 void printProgramLog(int prog);
 bool checkOpenGLError();
+
+std::string readShaderSource(const char* filePath);
 
 
 int main(void)
@@ -59,16 +63,11 @@ void display(GLFWwindow* window, double currentTime)
 
 GLuint createShaderProgram()
 {
-	const char* vshaderSource = "#version 430 \n"
-		"void main(void) \n"
-		"{ gl_Position = vec4(0.0, 0.0, 0.0, 1.0); }";
+	std::string vertSourceStr = readShaderSource("../../shader/vertShader.vs");
+	std::string fragSourceStr = readShaderSource("../../shader/fragShader.fs");
 
-	const char* fshaderSource = "#version 430 \n"
-		"out vec4 color; \n"
-		"void main(void) \n"
-		"{ if (gl_FragCoord.x < 300) color = vec4(0.0, 0.0, 1.0, 1.0); \n"
-		"  else color = vec4(1.0, 0.0, 0.0, 1.0); }";
-
+	const char* vshaderSource = vertSourceStr.c_str();
+	const char* fshaderSource = fragSourceStr.c_str();
 
 	GLuint vshader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vshader, 1, &vshaderSource, NULL);
@@ -145,4 +144,17 @@ bool checkOpenGLError()
 		glErr = glGetError();
 	}
 	return foundError;
+}
+
+std::string readShaderSource(const char* filePath)
+{
+	std::string content;
+	std::ifstream fileStream(filePath, std::ios::in);
+	std::string line = "";
+	while (!fileStream.eof()) {
+		std::getline(fileStream, line);
+		content.append(line + "\n");
+	}
+	fileStream.close();
+	return content;
 }
