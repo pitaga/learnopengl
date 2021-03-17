@@ -7,6 +7,8 @@
 #define numVAOS 1
 GLuint vao[numVAOS];
 GLuint renderingProgram;
+float x = 0.0f;
+float inc = 0.01f;
 
 void init(GLFWwindow* window);
 void display(GLFWwindow* window, double currentTime);
@@ -54,11 +56,18 @@ void init(GLFWwindow* window)
 
 void display(GLFWwindow* window, double currentTime)
 {
-	//glClearColor(1.0, 0.0, 0.0, 1.0);
-	//glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_DEPTH_BUFFER_BIT);
 	glUseProgram(renderingProgram);
-	glPointSize(30);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glClear(GL_COLOR_BUFFER_BIT);
+	//glPointSize(30);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+	x += inc;						// 切换至让三角形向右移动
+	if (x > 1.0f) inc = -0.01f;		// 沿 x 轴移动三角形
+	if (x < -1.0f) inc = 0.01f;		// 切换至三角形向左移动
+	GLuint offsetLoc = glGetUniformLocation(renderingProgram, "offset");	// 获取 "offset" 指针
+	glProgramUniform1f(renderingProgram, offsetLoc, x);		// 将 "x" 中的值传给 "offset"
+
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
