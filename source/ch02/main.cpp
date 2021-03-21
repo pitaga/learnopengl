@@ -18,7 +18,7 @@ GLuint vao[numVAOs];
 GLuint vbo[numVBOs];
 
 // 分配在 display() 函数中使用的变量空间，这样它们就不必在渲染过程中分配
-GLuint mvLoc, projLoc;
+GLuint vLoc, projLoc, tfLoc;
 int width, height;
 float aspect;
 glm::mat4 pMat, vMat, mMat, mvMat, tMat, rMat;
@@ -94,41 +94,35 @@ void display(GLFWwindow* window, double currentTime)
 	glUseProgram(renderingProgram);
 
 	// 获取 MV 矩阵和投影矩阵的统一变量
-	mvLoc = glGetUniformLocation(renderingProgram, "mv_matrix");
+	vLoc = glGetUniformLocation(renderingProgram, "v_matrix");
 	projLoc = glGetUniformLocation(renderingProgram, "proj_matrix");
+	tfLoc = glGetUniformLocation(renderingProgram, "tf");
 
 	// 构建透视矩阵
 	glfwGetFramebufferSize(window, &width, &height);
 	aspect = (float)width / (float)height;
 	pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f);	// 1.0472 radians = 60 degrees
 
-	// 构建视图矩阵、模型矩阵和视图-模型矩阵
+	// 构建视图矩阵
 	vMat = glm::translate(glm::mat4(1.0f), glm::vec3(-cameraX, -cameraY, -cameraZ));
-	mMat = glm::translate(glm::mat4(1.0f), glm::vec3(cubeLocX, cubeLocY, cubeLocZ));
-	mvMat = vMat * mMat;
 
-	// 使用当前时间来计算 x, y 和 z 的不同变换
-	tMat = glm::translate(glm::mat4(1.0f), glm::vec3(
-		sin(0.35 * currentTime) * 2.0f,
-		cos(0.52f * currentTime) * 2.0f,
-		sin(0.7f * currentTime) * 2.0f
-	));
-	rMat = glm::rotate(glm::mat4(1.0f), 1.75f * (float)currentTime, glm::vec3(1.0f, 0.0f, 0.0f));
-	rMat = glm::rotate(rMat, 1.75f * (float)currentTime, glm::vec3(1.0f, 0.0f, 0.0f));
-	rMat = glm::rotate(rMat, 1.75f * (float)currentTime, glm::vec3(0.0f, 0.0f, 1.0f));
-	mvMat = vMat * tMat * rMat;
+	for (int i = 0; i < 24; ++i)
+	{
+		float tf = currentTime + i;
 
-	// 将透视矩阵和 MV 矩阵复制给相应的统一变量
-	glUniformMatrix4fv(mvLoc, 1, GL_FALSE, glm::value_ptr(mvMat));
-	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(pMat));
+		// 构建和变换模型矩阵的计算已经移动到顶点着色器中去了
+		glUniformMatrix4fv(vLoc, 1, GL_FALSE, glm::value_ptr(vMat));
+		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(pMat));
+		glUniform1f(tfLoc, tf);
 
-	// 将 VBO 关联给顶点着色器中相应的顶点属性
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(0);
+		// 将 VBO 关联给顶点着色器中相应的顶点属性
+		glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+		glEnableVertexAttribArray(0);
 
-	// 调整 OpenGL 设置，绘制模型
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LEQUAL);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
+		// 调整 OpenGL 设置，绘制模型
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LEQUAL);
+		glDrawArraysInstanced(GL_TRIANGLES, 0, 36, 24);
+	}
 }
