@@ -33,7 +33,7 @@ int main(void)
 	if (!glfwInit()) { exit(EXIT_FAILURE); }
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	GLFWwindow* window = glfwCreateWindow(600, 400, "ch04", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(800, 600, "ch04", NULL, NULL);
 	glfwMakeContextCurrent(window);
 
 	if (!gladLoadGL()) { exit(EXIT_FAILURE); }
@@ -82,7 +82,7 @@ void setupVertices(void)
 void init(GLFWwindow* window)
 {
 	renderingProgram = Utils::createShaderProgram("../../shader/vertShader.vs", "../../shader/fragShader.fs");
-	cameraX = 0.0f; cameraY = 0.0f; cameraZ = 8.0f;
+	cameraX = 0.0f; cameraY = 0.0f; cameraZ = 402.0f;
 	cubeLocX = 0.0f; cubeLocY = -2.0f; cubeLocZ = 0.0f;		// 沿 Y 周下移以展示透视
 	setupVertices();
 }
@@ -123,6 +123,6 @@ void display(GLFWwindow* window, double currentTime)
 		// 调整 OpenGL 设置，绘制模型
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
-		glDrawArraysInstanced(GL_TRIANGLES, 0, 36, 24);
+		glDrawArraysInstanced(GL_TRIANGLES, 0, 36, 100000);
 	}
 }

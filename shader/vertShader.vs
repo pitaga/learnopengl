@@ -2,7 +2,7 @@
 
 layout (location = 0) in vec3 position;
 
-uniform mat4 m_matrix;      // 这些是分开的模型和视图矩阵
+uniform mat4 m_matrix;      // 这些是分开的模型和视图矩阵, 构建模型矩阵步骤已经移交顶点着色器处理
 uniform mat4 v_matrix;
 uniform mat4 proj_matrix;
 uniform float tf;           // 用于动画和放置立方体的时间因子
@@ -17,9 +17,9 @@ mat4 buildTranslate(float x, float y, float z);
 void main(void)
 {
     float i = gl_InstanceID + tf;   // 取值基于时间因子，但是对每个立方体示例也都是不同的
-    float a = sin(2.0 * i) * 8.0;   // 这些是用来平移的 x、y、z 分量
-    float b = sin(3.0 * i) * 8.0;
-    float c = sin(4.0 * i) * 8.0;
+    float a = sin(203.0 * i / 8000.0) * 403.0;   // 这些是用来平移的 x、y、z 分量
+    float b = sin(301.0 * i / 4001.0) * 401.0;
+    float c = sin(400.0 * i / 6003.0) * 405.0;
 
     // 构建旋转和平移矩阵, 将会应用于当前立方体的模型矩阵
     mat4 localRotX = buildRotateX(1000 * i);
@@ -28,7 +28,7 @@ void main(void)
     mat4 localTans = buildTranslate(a, b, c);
 
     // 构建模型矩阵, 然后是模型-视图矩阵
-    mat4 newM_matrix = m_matrix * localTans * localRotX * localRotY * localRotZ;
+    mat4 newM_matrix = localTans * localRotX * localRotY * localRotZ;
     mat4 mv_matrix = v_matrix * newM_matrix;
 
     gl_Position = proj_matrix * mv_matrix * vec4(position, 1.0);
